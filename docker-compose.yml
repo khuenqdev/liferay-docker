@@ -1,0 +1,31 @@
+version: '3.4'
+services:
+  liferay-portal:
+    image: liferay/portal:latest
+    container_name: liferay-portal
+    restart: always
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./src:/mnt/liferay
+    environment:
+      - LIFERAY_JDBC_PERIOD_DEFAULT_PERIOD_DRIVER_UPPERCASEC_LASS_UPPERCASEN_AME=org.postgresql.Driver
+      - LIFERAY_JDBC_PERIOD_DEFAULT_PERIOD_URL=jdbc:postgresql://liferay-portal-db:5432/lportal?user=lportal&password=liferay123&useUnicode=true&characterEncoding=UTF-8&useFastDateParsing=false&sslmode=disable
+      - LIFERAY_JDBC_PERIOD_DEFAULT_PERIOD_USERNAME=lportal
+      - LIFERAY_JDBC_PERIOD_DEFAULT_PERIOD_PASSWORD=liferay123
+
+  postgres-db:
+    image: postgres
+    container_name: liferay-portal-db
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres:/var/lib/postgresql/data
+      - ./scripts/init-database.sh:/docker-entrypoint-initdb.d/init-database.sh
+
+volumes:
+  postgres:
